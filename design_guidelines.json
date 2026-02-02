@@ -1,0 +1,157 @@
+{
+  "identity": {
+    "name": "SmartSaveAI",
+    "tagline": "Your Savage Financial Coach",
+    "tone": "Friendly, Casual, Slightly Savage, Gen Z",
+    "mission": "Help students survive the month without going broke, using AI that feels like a smart friend."
+  },
+  "typography": {
+    "font_family": {
+      "primary": "Inter, sans-serif",
+      "secondary": "Inter, sans-serif"
+    },
+    "scale": {
+      "h1": "text-4xl md:text-5xl font-bold tracking-tight",
+      "h2": "text-3xl md:text-4xl font-semibold tracking-tight",
+      "h3": "text-2xl font-semibold tracking-tight",
+      "body": "text-base leading-relaxed",
+      "caption": "text-sm text-muted-foreground",
+      "big_number": "text-6xl md:text-7xl font-black tracking-tighter"
+    },
+    "weights": {
+      "regular": "400",
+      "medium": "500",
+      "bold": "700",
+      "black": "900"
+    }
+  },
+  "colors": {
+    "theme_mode": "dark",
+    "palette": {
+      "primary": "#793AFF",
+      "primary_foreground": "#FFFFFF",
+      "background": "#0A0A0A",
+      "foreground": "#FFFFFF",
+      "card": "#121212",
+      "card_foreground": "#FFFFFF",
+      "secondary": "#1E1E1E",
+      "secondary_foreground": "#FFFFFF",
+      "muted": "#2A2A2A",
+      "muted_foreground": "#A1A1AA",
+      "accent": "#793AFF",
+      "accent_foreground": "#FFFFFF",
+      "destructive": "#FF3B30",
+      "destructive_foreground": "#FFFFFF",
+      "success": "#34C759",
+      "warning": "#FFCC00",
+      "border": "#27272A",
+      "input": "#27272A",
+      "ring": "#793AFF"
+    },
+    "gradients": {
+      "primary_gradient": "bg-gradient-to-br from-[#793AFF] to-[#5E2AD6]",
+      "surface_gradient": "bg-gradient-to-b from-[#121212] to-[#0A0A0A]",
+      "glow": "shadow-[0_0_20px_rgba(121,58,255,0.3)]"
+    }
+  },
+  "layout": {
+    "container": "max-w-md mx-auto min-h-screen bg-background overflow-hidden relative",
+    "spacing": {
+      "page_padding": "p-6",
+      "section_gap": "gap-8",
+      "item_gap": "gap-4"
+    },
+    "radius": {
+      "card": "rounded-3xl",
+      "button": "rounded-full",
+      "input": "rounded-xl"
+    },
+    "grids": {
+      "dashboard": "flex flex-col gap-6",
+      "bento": "grid grid-cols-2 gap-4"
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": "bg-primary text-primary-foreground hover:bg-primary/90 h-12 px-8 rounded-full font-medium transition-all active:scale-95 shadow-lg shadow-primary/20",
+      "secondary": "bg-secondary text-secondary-foreground hover:bg-secondary/80 h-12 px-8 rounded-full font-medium transition-all active:scale-95",
+      "ghost": "hover:bg-accent/10 hover:text-accent h-10 px-4 rounded-full transition-colors",
+      "destructive": "bg-destructive/10 text-destructive hover:bg-destructive/20 h-12 px-8 rounded-full font-medium"
+    },
+    "cards": {
+      "base": "bg-card border border-border/50 rounded-3xl p-6 shadow-xl backdrop-blur-sm",
+      "highlight": "bg-primary text-primary-foreground rounded-3xl p-6 shadow-2xl shadow-primary/20 relative overflow-hidden",
+      "glass": "bg-black/40 backdrop-blur-xl border border-white/10 rounded-3xl p-6"
+    },
+    "inputs": {
+      "base": "bg-secondary/50 border-transparent focus:border-primary focus:ring-2 focus:ring-primary/20 h-12 rounded-xl px-4 transition-all placeholder:text-muted-foreground/50"
+    },
+    "navigation": {
+      "bottom_bar": "fixed bottom-6 left-6 right-6 bg-[#1A1A1A]/90 backdrop-blur-lg border border-white/5 rounded-full h-16 flex items-center justify-around px-2 shadow-2xl z-50"
+    }
+  },
+  "visual_enhancers": {
+    "shadows": {
+      "card": "shadow-lg shadow-black/50",
+      "glow": "shadow-[0_0_30px_-5px_rgba(121,58,255,0.4)]"
+    },
+    "animations": {
+      "hover": "transition-transform duration-200 ease-out hover:-translate-y-1",
+      "click": "active:scale-95 transition-transform duration-100",
+      "fade_in": "animate-in fade-in duration-500 slide-in-from-bottom-4"
+    },
+    "decorations": {
+      "noise": "before:absolute before:inset-0 before:bg-[url('https://grainy-gradients.vercel.app/noise.svg')] before:opacity-5 before:pointer-events-none",
+      "blob": "absolute -z-10 blur-3xl opacity-30"
+    }
+  },
+  "assets": {
+    "images": {
+      "ai_avatar": "https://images.unsplash.com/photo-1754738381739-5efb94a4525b?crop=entropy&cs=srgb&fm=jpg&q=85",
+      "stressed_student": "https://images.unsplash.com/photo-1599833058222-6ab271909436?crop=entropy&cs=srgb&fm=jpg&q=85",
+      "happy_student": "https://images.unsplash.com/photo-1762392633652-fa8ce811da3e?crop=entropy&cs=srgb&fm=jpg&q=85"
+    },
+    "icons": {
+      "library": "lucide-react",
+      "style": "stroke-width={1.5}"
+    }
+  },
+  "ai_assistant": {
+    "name": "SmartSave Bot",
+    "avatar_style": "Abstract 3D Orb (Purple)",
+    "chat_bubble_user": "bg-secondary text-secondary-foreground rounded-2xl rounded-tr-sm px-4 py-3 max-w-[85%]",
+    "chat_bubble_ai": "bg-primary/10 text-primary border border-primary/20 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[85%]"
+  },
+  "instructions_to_main_agent": [
+    "Implement a 'Mobile-First' layout. The app should look like a native mobile app even on desktop (centered container).",
+    "Use the 'Inter' font for a clean, Revolut-like aesthetic.",
+    "The 'Dashboard' should focus on the 'Money Left' as the hero element.",
+    "Use the 'Abstract Purple 3D' image as the background or avatar for the AI Assistant.",
+    "Ensure the 'Add Expense' flow is extremely fast (fewer clicks).",
+    "Use 'Sonner' for all toast notifications (e.g., 'Expense added 💸').",
+    "Implement the 'Savage' tone in the AI text responses.",
+    "Use LocalStorage to persist the 'Monthly Budget' and 'Expenses'.",
+    "The 'Burn Rate' calculation is: (Total Spent / Days Passed).",
+    "The 'Safe Daily Spend' calculation is: (Money Left / Days Left)."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "Dark colors look good when used independently without gradients. DO NOT use dark colors as gradients",
+    "Don't make generic centered layouts, simplistic gradients, and uniform styling.",
+    "Create depth through layered design elements with z-index hierarchy",
+    "Use glass-morphism effects with backdrop filters (12-24px blur)",
+    "You MUST NOT apply universal transition. Eg: transition: all. This results in breaking transforms. Always add transitions for specific interactive elements like button, input excluding transforms",
+    "You MUST NOT center align the app container, ie do not add .App { text-align: center; } in the css file. This disrupts the human natural reading flow of text",
+    "Always use modern button styles like pill-shaped, or sharp button with interaction animations & color relevant to the app style",
+    "NEVER: use AI assistant Emoji characters like 🤖🧠💭💡🔮🎯 etc for icons.",
+    "Every interaction needs micro-animations - hover states, transitions, parallax effects, and entrance animations. Static = dead.",
+    "Use 2-3x more spacing than feels comfortable. Cramped designs look cheap.",
+    "Subtle grain textures, noise overlays, custom cursors, selection states, and loading animations: separates good from extraordinary.",
+    "Main agent relies on these image URLs. Missing categories (especially sponsor logos) = main agent will use placeholder text which is FORBIDDEN",
+    "Prioritize using pre-existing components from src/components/ui when applicable",
+    "Create new components that match the style and conventions of existing components when needed",
+    "Examine existing components to understand the project's component patterns before creating new ones",
+    "Components MUST use named exports (export const ComponentName = ...)",
+    "Pages MUST use default exports (export default function PageName() {...})",
+    "Use 'sonner' for toasts. Sonner component are located in /app/src/components/ui/sonner.tsx"
+  ]
+}
