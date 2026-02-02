@@ -284,10 +284,11 @@ export default function Dashboard() {
 
       {/* Category Breakdown Modal */}
       <Dialog open={showCategoryModal} onOpenChange={setShowCategoryModal}>
-        <DialogContent className="bg-card border-border" data-testid="category-modal">
+        <DialogContent className="bg-card border-border" data-testid="category-modal" aria-describedby="category-dialog-description">
           <DialogHeader>
             <DialogTitle>Category Breakdown</DialogTitle>
           </DialogHeader>
+          <div id="category-dialog-description" className="sr-only">View your spending breakdown by category</div>
           <CategoryBreakdown expenses={expenses} totalSpent={totalSpent} />
         </DialogContent>
       </Dialog>
