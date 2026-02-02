@@ -268,7 +268,8 @@ export default function Dashboard() {
 
       {/* AI Assistant Modal */}
       <Dialog open={showAIModal} onOpenChange={setShowAIModal}>
-        <DialogContent className="bg-card border-border max-w-lg" data-testid="ai-modal">
+        <DialogContent className="bg-card border-border max-w-lg" data-testid="ai-modal" aria-describedby="ai-dialog-description">
+          <div id="ai-dialog-description" className="sr-only">Get AI-powered financial advice based on your spending</div>
           <AIAssistant
             moneyLeft={moneyLeft}
             daysLeft={daysLeft}
