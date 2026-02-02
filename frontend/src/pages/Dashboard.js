@@ -205,10 +205,11 @@ export default function Dashboard() {
 
       {/* Add Expense Modal */}
       <Dialog open={showExpenseModal} onOpenChange={setShowExpenseModal}>
-        <DialogContent className="bg-card border-border" data-testid="expense-modal">
+        <DialogContent className="bg-card border-border" data-testid="expense-modal" aria-describedby="expense-dialog-description">
           <DialogHeader>
             <DialogTitle>Add Expense</DialogTitle>
           </DialogHeader>
+          <div id="expense-dialog-description" className="sr-only">Add a new expense to track your spending</div>
           <div className="space-y-4">
             <div>
               <Label htmlFor="amount">Amount (€)</Label>
