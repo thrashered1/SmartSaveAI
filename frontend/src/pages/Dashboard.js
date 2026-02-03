@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Wallet, TrendingDown, Calendar, Zap, Plus, Sparkles, PieChart } from 'lucide-react';
+import { Wallet, TrendingDown, Calendar, Zap, Plus, Sparkles, PieChart, ArrowDownCircle } from 'lucide-react';
 import { Button } from '../components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../components/ui/dialog';
+import { Dialog, DialogContent } from '../components/ui/dialog';
 import { Input } from '../components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Label } from '../components/ui/label';
+import { X } from 'lucide-react';
 import { toast } from 'sonner';
 import ExpenseList from '../components/ExpenseList';
 import CategoryBreakdown from '../components/CategoryBreakdown';
 import AIAssistant from '../components/AIAssistant';
+import AddIncomeModal from '../components/AddIncomeModal';
 import StreakTracker from '../components/gamification/StreakTracker';
 import HealthScore from '../components/gamification/HealthScore';
 
