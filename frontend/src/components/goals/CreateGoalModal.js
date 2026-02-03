@@ -30,7 +30,7 @@ export default function CreateGoalModal({ open, onClose, onCreate }) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="bg-black border border-white/10 max-w-md p-0 gap-0" data-testid="create-goal-modal">
+      <DialogContent className="bg-black border border-white/10 max-w-lg p-0 gap-0" data-testid="create-goal-modal">
         <div className="p-8">
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
