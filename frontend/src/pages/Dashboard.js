@@ -17,7 +17,7 @@ const API = `${BACKEND_URL}/api`;
 
 const CATEGORIES = ['Food', 'Transport', 'Rent', 'Fun', 'Shopping', 'Other'];
 
-export default function Dashboard() {
+export default function Dashboard({ onShowExpenseModal }) {
   const navigate = useNavigate();
   const [budget, setBudget] = useState(null);
   const [expenses, setExpenses] = useState([]);
@@ -25,6 +25,15 @@ export default function Dashboard() {
   const [showAIModal, setShowAIModal] = useState(false);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [loading, setLoading] = useState(true);
+  
+  // Listen for add expense trigger from bottom nav
+  useEffect(() => {
+    if (onShowExpenseModal) {
+      const handleShowModal = () => setShowExpenseModal(true);
+      window.addEventListener('showExpenseModal', handleShowModal);
+      return () => window.removeEventListener('showExpenseModal', handleShowModal);
+    }
+  }, [onShowExpenseModal]);
   
   const [newExpense, setNewExpense] = useState({
     amount: '',
