@@ -28,12 +28,10 @@ export default function Dashboard({ onShowExpenseModal }) {
   
   // Listen for add expense trigger from bottom nav
   useEffect(() => {
-    if (onShowExpenseModal) {
-      const handleShowModal = () => setShowExpenseModal(true);
-      window.addEventListener('showExpenseModal', handleShowModal);
-      return () => window.removeEventListener('showExpenseModal', handleShowModal);
-    }
-  }, [onShowExpenseModal]);
+    const handleShowModal = () => setShowExpenseModal(true);
+    window.addEventListener('openExpenseModal', handleShowModal);
+    return () => window.removeEventListener('openExpenseModal', handleShowModal);
+  }, []);
   
   const [newExpense, setNewExpense] = useState({
     amount: '',
