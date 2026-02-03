@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import Onboarding from './pages/Onboarding';
 import Insights from './pages/Insights';
+import Goals from './pages/Goals';
 import Settings from './pages/Settings';
 import BottomNav from './components/BottomNav';
 import { Toaster } from 'sonner';
@@ -21,6 +22,7 @@ function AppContent() {
         <Route path="/" element={<Dashboard onShowExpenseModal={setShowExpenseModal} />} />
         <Route path="/onboarding" element={<Onboarding />} />
         <Route path="/insights" element={<Insights />} />
+        <Route path="/goals" element={<Goals />} />
         <Route path="/settings" element={<Settings />} />
       </Routes>
       {shouldShowNav && <BottomNav onAddExpense={() => setShowExpenseModal(true)} />}
