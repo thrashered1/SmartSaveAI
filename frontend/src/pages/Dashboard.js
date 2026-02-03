@@ -172,16 +172,16 @@ export default function Dashboard({ onShowExpenseModal }) {
       </div>
 
       {/* Money Left Hero */}
-      <div className="mb-6 bg-gradient-to-br from-[#793AFF] to-[#5E2AD6] rounded-3xl p-8 glow-purple animate-fade-in" data-testid="money-left-card">
-        <div className="flex items-center gap-2 mb-2">
-          <Wallet className="w-5 h-5 opacity-80" />
-          <span className="text-sm font-medium opacity-80">Money Left</span>
+      <div className="mb-8 premium-gradient rounded-3xl p-8 animate-slide-up" data-testid="money-left-card">
+        <div className="flex items-center gap-2 mb-3">
+          <Wallet className="w-5 h-5 opacity-90" />
+          <span className="text-sm font-semibold opacity-90 uppercase tracking-wider">Available Balance</span>
         </div>
-        <div className="text-6xl font-black tracking-tighter mb-1" data-testid="money-left-amount">
+        <div className="text-7xl font-bold tracking-tighter mb-2 number-display" data-testid="money-left-amount">
           €{moneyLeft.toFixed(2)}
         </div>
-        <div className="text-sm opacity-80">
-          of €{budget.total_income.toFixed(2)} budget
+        <div className="text-sm opacity-80 font-medium">
+          {((moneyLeft / budget.total_income) * 100).toFixed(1)}% of €{budget.total_income.toFixed(2)} budget
         </div>
       </div>
 
