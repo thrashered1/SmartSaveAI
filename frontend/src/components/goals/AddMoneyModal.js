@@ -21,7 +21,7 @@ export default function AddMoneyModal({ open, onClose, goal, onAddMoney }) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="bg-[#1a1f3a] border-border max-w-md" data-testid="add-money-modal">
+      <DialogContent className="bg-black border border-white/10 max-w-lg p-0 gap-0" data-testid="add-money-modal">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold flex items-center gap-2">
             <span className="text-3xl">{goal.icon}</span>
