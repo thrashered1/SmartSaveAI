@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
+import { X } from 'lucide-react';
 
 const GOAL_ICONS = ['💻', '🏖️', '🎓', '🚗', '🏠', '💍', '🎮', '📱', '💰', '🎁', '✈️', '🏋️', '📚', '🎸', '🎨', '🍕', '🎬', '🐕'];
 
