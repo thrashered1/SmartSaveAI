@@ -44,30 +44,31 @@ export default function CreateGoalModal({ open, onClose, onCreate }) {
             </button>
           </div>
 
-        <div className="space-y-5 mt-4">
           {/* Goal Name */}
-          <div>
-            <Label className="text-xs text-[#9ca3af] uppercase mb-2 block">GOAL NAME</Label>
+          <div className="mb-6">
+            <Label className="text-purple-400 text-xs font-bold uppercase tracking-wider mb-4 block">Goal Name</Label>
             <Input
               placeholder="What are you saving for?"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="bg-[#2a3150] border-transparent h-12"
+              className="bg-[#1a1a1a] border-white/10 h-14 text-white placeholder:text-white/30"
               maxLength={30}
               data-testid="goal-name-input"
             />
           </div>
 
           {/* Icon Selector */}
-          <div>
-            <Label className="text-xs text-[#9ca3af] uppercase mb-2 block">CHOOSE ICON</Label>
-            <div className="grid grid-cols-6 gap-2 max-h-32 overflow-y-auto">
+          <div className="mb-6">
+            <Label className="text-purple-400 text-xs font-bold uppercase tracking-wider mb-4 block">Choose Icon</Label>
+            <div className="grid grid-cols-6 gap-2">
               {GOAL_ICONS.map(icon => (
                 <button
                   key={icon}
                   onClick={() => setFormData({ ...formData, icon })}
-                  className={`w-12 h-12 rounded-xl bg-[#2a3150] flex items-center justify-center text-2xl transition-all ${
-                    formData.icon === icon ? 'ring-2 ring-primary scale-110' : 'hover:bg-[#3a4160]'
+                  className={`w-14 h-14 rounded-xl flex items-center justify-center text-2xl transition-all ${
+                    formData.icon === icon 
+                      ? 'bg-gradient-to-br from-purple-500/20 to-purple-600/20 ring-2 ring-purple-500 scale-110' 
+                      : 'bg-[#1a1a1a] hover:bg-[#222222] border border-white/5'
                   }`}
                   data-testid={`icon-${icon}`}
                 >
@@ -78,48 +79,48 @@ export default function CreateGoalModal({ open, onClose, onCreate }) {
           </div>
 
           {/* Target Amount */}
-          <div>
-            <Label className="text-xs text-[#9ca3af] uppercase mb-2 block">TARGET AMOUNT</Label>
+          <div className="mb-6">
+            <Label className="text-purple-400 text-xs font-bold uppercase tracking-wider mb-4 block">Target Amount</Label>
             <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-3xl font-bold text-[#9ca3af]">€</span>
+              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-4xl font-bold text-white/30">€</span>
               <Input
                 type="number"
                 step="0.01"
                 placeholder="0.00"
                 value={formData.target_amount}
                 onChange={(e) => setFormData({ ...formData, target_amount: e.target.value })}
-                className="bg-[#2a3150] border-transparent h-20 text-4xl font-bold text-center"
+                className="bg-[#1a1a1a] border-white/10 h-28 text-6xl font-bold text-right pr-6 text-white placeholder:text-white/20"
                 data-testid="target-amount-input"
               />
             </div>
           </div>
 
           {/* Deadline */}
-          <div>
-            <Label className="text-xs text-[#9ca3af] uppercase mb-2 block">DEADLINE (OPTIONAL)</Label>
+          <div className="mb-6">
+            <Label className="text-purple-400 text-xs font-bold uppercase tracking-wider mb-4 block">Deadline (Optional)</Label>
             <Input
               type="date"
               value={formData.deadline}
               onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
-              className="bg-[#2a3150] border-transparent h-12"
+              className="bg-[#1a1a1a] border-white/10 h-14 text-white"
               data-testid="deadline-input"
             />
           </div>
 
           {/* Priority */}
-          <div>
-            <Label className="text-xs text-[#9ca3af] uppercase mb-2 block">PRIORITY</Label>
+          <div className="mb-8">
+            <Label className="text-purple-400 text-xs font-bold uppercase tracking-wider mb-4 block">Priority</Label>
             <div className="grid grid-cols-3 gap-3">
               {['low', 'medium', 'high'].map(priority => (
                 <button
                   key={priority}
                   onClick={() => setFormData({ ...formData, priority })}
-                  className={`py-3 rounded-full font-medium capitalize transition-all ${
+                  className={`py-4 rounded-xl font-semibold capitalize transition-all ${
                     formData.priority === priority
-                      ? priority === 'high' ? 'bg-[#FF3B5C] text-white'
-                        : priority === 'medium' ? 'bg-[#FFB800] text-white'
-                        : 'bg-[#6b7280] text-white'
-                      : 'bg-[#2a3150] text-muted-foreground hover:bg-[#3a4160]'
+                      ? priority === 'high' ? 'bg-red-500 text-white'
+                        : priority === 'medium' ? 'bg-yellow-500 text-black'
+                        : 'bg-gray-500 text-white'
+                      : 'bg-[#1a1a1a] text-white/50 hover:bg-[#222222] border border-white/5'
                   }`}
                   data-testid={`priority-${priority}`}
                 >
@@ -133,12 +134,11 @@ export default function CreateGoalModal({ open, onClose, onCreate }) {
           <Button
             onClick={handleSubmit}
             disabled={!formData.name || !formData.target_amount}
-            className="w-full h-14 text-lg rounded-full bg-gradient-to-r from-[#00D4FF] to-[#7c3aed] hover:opacity-90"
+            className="w-full h-16 text-lg font-bold rounded-xl bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 disabled:opacity-50 shadow-lg shadow-purple-500/20"
             data-testid="submit-goal-btn"
           >
-            Create Goal 🎯
+            Create Goal
           </Button>
-        </div>
         </div>
       </DialogContent>
     </Dialog>
