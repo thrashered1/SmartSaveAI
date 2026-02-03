@@ -209,6 +209,21 @@ export default function Dashboard({ onShowExpenseModal }) {
         </Button>
       </div>
 
+      {/* Gamification Components */}
+      <div className=\"space-y-4 mb-6 animate-fade-in\">
+        <StreakTracker 
+          expenses={expenses} 
+          budget={budget} 
+          moneyLeft={moneyLeft}
+          daysLeft={daysLeft}
+        />
+        <HealthScore 
+          expenses={expenses} 
+          budget={budget} 
+          moneyLeft={moneyLeft}
+        />
+      </div>
+
       {/* Recent Expenses */}
       <ExpenseList expenses={expenses} onDelete={deleteExpense} />
 
