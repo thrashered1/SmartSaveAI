@@ -98,19 +98,28 @@ export default function Goals() {
   return (
     <div className="max-w-md mx-auto min-h-screen bg-background p-6 pb-24">
       {/* Header */}
-      <div className="mb-8 animate-fade-in">
-        <h1 className="text-3xl font-bold tracking-tight mb-2" data-testid="goals-title">Goals</h1>
-        <p className="text-sm text-muted-foreground">Track your savings journey</p>
+      <div className="mb-8 animate-fade-in flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight mb-1" data-testid="goals-title">Goals</h1>
+          <p className="text-sm text-muted-foreground font-medium">Track your savings journey</p>
+        </div>
+        <Button
+          onClick={() => setShowCreateModal(true)}
+          className="h-11 w-11 rounded-xl bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-600 shadow-lg shadow-purple-500/25 p-0"
+          data-testid="create-goal-btn"
+        >
+          <Plus className="w-5 h-5" />
+        </Button>
       </div>
 
       {/* Overall Progress Card */}
       {goals.length > 0 && (
-        <div className="mb-6 bg-gradient-to-br from-[#793AFF] to-[#5E2AD6] rounded-3xl p-6 glow-purple animate-fade-in" data-testid="overall-progress">
+        <div className="mb-6 premium-gradient rounded-3xl p-6 animate-fade-in" data-testid="overall-progress">
           <div className="flex items-center gap-2 mb-3">
-            <Target className="w-5 h-5 opacity-80" />
-            <span className="text-sm font-medium opacity-80">Your Savings Goals</span>
+            <Target className="w-5 h-5 opacity-90" />
+            <span className="text-sm font-semibold opacity-90 uppercase tracking-wider">Total Progress</span>
           </div>
-          <div className="text-4xl font-black tracking-tighter mb-2">
+          <div className="text-5xl font-bold tracking-tighter mb-2 number-display">
             €{totalSaved.toFixed(2)}
           </div>
           <div className="text-sm opacity-80 mb-3">of €{totalTarget.toFixed(2)} target</div>
@@ -122,24 +131,24 @@ export default function Goals() {
       {/* Stats Grid */}
       {goals.length > 0 && (
         <div className="grid grid-cols-4 gap-3 mb-6 animate-fade-in">
-          <div className="bg-card border border-border/50 rounded-2xl p-3 text-center">
-            <Target className="w-5 h-5 mx-auto mb-1 text-primary" />
-            <div className="text-2xl font-bold">{activeGoals.length}</div>
+          <div className="premium-card p-4 text-center">
+            <Target className="w-5 h-5 mx-auto mb-1 text-purple-400" />
+            <div className="text-2xl font-bold number-display">{activeGoals.length}</div>
             <div className="text-xs text-muted-foreground">Active</div>
           </div>
-          <div className="bg-card border border-border/50 rounded-2xl p-3 text-center">
-            <CheckCircle className="w-5 h-5 mx-auto mb-1 text-success" />
-            <div className="text-2xl font-bold">{completedGoals.length}</div>
+          <div className="premium-card p-4 text-center">
+            <CheckCircle className="w-5 h-5 mx-auto mb-1 text-green-400" />
+            <div className="text-2xl font-bold number-display">{completedGoals.length}</div>
             <div className="text-xs text-muted-foreground">Done</div>
           </div>
-          <div className="bg-card border border-border/50 rounded-2xl p-3 text-center">
-            <Wallet className="w-5 h-5 mx-auto mb-1 text-primary" />
-            <div className="text-2xl font-bold">€{totalSaved.toFixed(0)}</div>
+          <div className="premium-card p-4 text-center">
+            <Wallet className="w-5 h-5 mx-auto mb-1 text-purple-400" />
+            <div className="text-xl font-bold number-display">€{totalSaved.toFixed(0)}</div>
             <div className="text-xs text-muted-foreground">Saved</div>
           </div>
-          <div className="bg-card border border-border/50 rounded-2xl p-3 text-center">
-            <TrendingUp className="w-5 h-5 mx-auto mb-1 text-success" />
-            <div className="text-2xl font-bold">{completedGoals.length > 0 ? ((completedGoals.length / goals.length) * 100).toFixed(0) : 0}%</div>
+          <div className="premium-card p-4 text-center">
+            <TrendingUp className="w-5 h-5 mx-auto mb-1 text-green-400" />
+            <div className="text-2xl font-bold number-display">{completedGoals.length > 0 ? ((completedGoals.length / goals.length) * 100).toFixed(0) : 0}%</div>
             <div className="text-xs text-muted-foreground">Rate</div>
           </div>
         </div>
@@ -171,7 +180,8 @@ export default function Goals() {
               <GoalCard
                 key={goal.id}
                 goal={goal}
-                onAddMoney={() => {}}  onDelete={handleDeleteGoal}
+                onAddMoney={() => {}}
+                onDelete={handleDeleteGoal}
                 completed
               />
             ))}
@@ -187,15 +197,6 @@ export default function Goals() {
           <p className="text-muted-foreground mb-6">Start saving for something special!</p>
         </div>
       )}
-
-      {/* Create Goal Button */}
-      <Button
-        onClick={() => setShowCreateModal(true)}
-        className="fixed bottom-24 right-6 w-14 h-14 rounded-full bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 flex items-center justify-center"
-        data-testid="create-goal-btn"
-      >
-        <Plus className="w-6 h-6" />
-      </Button>
 
       {/* Modals */}
       <CreateGoalModal
