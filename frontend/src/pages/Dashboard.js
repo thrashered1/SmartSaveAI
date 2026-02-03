@@ -162,11 +162,11 @@ export default function Dashboard({ onShowExpenseModal }) {
           </div>
           <Button
             onClick={() => setShowIncomeModal(true)}
-            className="h-11 px-6 rounded-xl bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-600 shadow-lg shadow-purple-500/25 font-semibold"
+            className="h-10 px-5 rounded-xl bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-600 shadow-lg shadow-purple-500/25 font-semibold text-sm"
             data-testid="add-income-btn"
           >
-            <Plus className="w-4 h-4 mr-2" />
-            Add Income
+            <Plus className="w-4 h-4 mr-1.5" />
+            Income
           </Button>
         </div>
       </div>
