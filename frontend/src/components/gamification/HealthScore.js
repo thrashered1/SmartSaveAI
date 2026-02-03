@@ -10,50 +10,50 @@ export default function HealthScore({ expenses, budget, moneyLeft }) {
 
   useEffect(() => {
     if (budget && expenses.length > 0) {
+      const calculateHealthScore = () => {
+        const currentMonth = new Date().getMonth() + 1;
+        const currentYear = new Date().getFullYear();
+        const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+        const daysPassed = new Date().getDate();
+
+        const totalSpent = expenses.reduce((sum, e) => sum + e.amount, 0);
+        const dailyBudget = budget.total_income / daysInMonth;
+
+        // 1. Budget Adherence (40 points)
+        const expectedSpent = dailyBudget * daysPassed;
+        const adherence = totalSpent > 0 ? Math.min((expectedSpent / totalSpent) * 40, 40) : 40;
+
+        // 2. Savings Rate (30 points)
+        const savingsRate = moneyLeft > 0 ? (moneyLeft / budget.total_income) * 30 : 0;
+
+        // 3. Spending Consistency (20 points)
+        const dailySpends = {};
+        expenses.forEach(e => {
+          dailySpends[e.date] = (dailySpends[e.date] || 0) + e.amount;
+        });
+        const spendValues = Object.values(dailySpends);
+        const avgSpend = spendValues.reduce((a, b) => a + b, 0) / spendValues.length;
+        const variance = spendValues.reduce((sum, val) => sum + Math.pow(val - avgSpend, 2), 0) / spendValues.length;
+        const consistency = Math.max(20 - (variance / 100), 0);
+
+        // 4. Emergency Fund (10 points)
+        const monthsReserve = budget.total_income > 0 ? moneyLeft / budget.total_income : 0;
+        const emergencyFund = Math.min(monthsReserve * 10, 10);
+
+        const total = Math.round(adherence + savingsRate + consistency + emergencyFund);
+
+        setScore(total);
+        setBreakdown({
+          budgetAdherence: Math.round(adherence),
+          savingsRate: Math.round(savingsRate),
+          consistency: Math.round(consistency),
+          emergencyFund: Math.round(emergencyFund)
+        });
+      };
+
       calculateHealthScore();
     }
   }, [expenses, budget, moneyLeft]);
-
-  const calculateHealthScore = () => {
-    const currentMonth = new Date().getMonth() + 1;
-    const currentYear = new Date().getFullYear();
-    const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
-    const daysPassed = new Date().getDate();
-    
-    const totalSpent = expenses.reduce((sum, e) => sum + e.amount, 0);
-    const dailyBudget = budget.total_income / daysInMonth;
-    
-    // 1. Budget Adherence (40 points)
-    const expectedSpent = dailyBudget * daysPassed;
-    const adherence = totalSpent > 0 ? Math.min((expectedSpent / totalSpent) * 40, 40) : 40;
-    
-    // 2. Savings Rate (30 points)
-    const savingsRate = moneyLeft > 0 ? (moneyLeft / budget.total_income) * 30 : 0;
-    
-    // 3. Spending Consistency (20 points)
-    const dailySpends = {};
-    expenses.forEach(e => {
-      dailySpends[e.date] = (dailySpends[e.date] || 0) + e.amount;
-    });
-    const spendValues = Object.values(dailySpends);
-    const avgSpend = spendValues.reduce((a, b) => a + b, 0) / spendValues.length;
-    const variance = spendValues.reduce((sum, val) => sum + Math.pow(val - avgSpend, 2), 0) / spendValues.length;
-    const consistency = Math.max(20 - (variance / 100), 0);
-    
-    // 4. Emergency Fund (10 points)
-    const monthsReserve = budget.total_income > 0 ? moneyLeft / budget.total_income : 0;
-    const emergencyFund = Math.min(monthsReserve * 10, 10);
-    
-    const total = Math.round(adherence + savingsRate + consistency + emergencyFund);
-    
-    setScore(total);
-    setBreakdown({
-      budgetAdherence: Math.round(adherence),
-      savingsRate: Math.round(savingsRate),
-      consistency: Math.round(consistency),
-      emergencyFund: Math.round(emergencyFund)
-    });
-  };
 
   const getScoreColor = () => {
     if (score >= 81) return '#00D4FF';

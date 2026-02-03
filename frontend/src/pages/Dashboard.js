@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Wallet, TrendingDown, Calendar, Zap, Plus, Sparkles, PieChart, ArrowDownCircle } from 'lucide-react';
@@ -55,15 +55,11 @@ export default function Dashboard({ onShowExpenseModal }) {
   const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       const budgetRes = await axios.get(`${API}/budget/${currentMonth}/${currentYear}`);
       setBudget(budgetRes.data);
-      
+
       const expensesRes = await axios.get(`${API}/expenses/${currentMonth}/${currentYear}`);
       setExpenses(expensesRes.data);
     } catch (error) {
@@ -73,7 +69,11 @@ export default function Dashboard({ onShowExpenseModal }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentMonth, currentYear, navigate]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   const addExpense = async () => {
     if (!newExpense.amount || parseFloat(newExpense.amount) <= 0) {

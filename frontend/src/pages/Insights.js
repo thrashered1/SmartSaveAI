@@ -26,32 +26,32 @@ export default function Insights() {
   const currentYear = new Date().getFullYear();
 
   useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
-    try {
-      const budgetRes = await axios.get(`${API}/budget/${currentMonth}/${currentYear}`);
-      setBudget(budgetRes.data);
-      
-      const expensesRes = await axios.get(`${API}/expenses/${currentMonth}/${currentYear}`);
-      setExpenses(expensesRes.data);
-      
-      // Load last month expenses for comparison
-      const lastMonth = currentMonth === 1 ? 12 : currentMonth - 1;
-      const lastYear = currentMonth === 1 ? currentYear - 1 : currentYear;
+    const loadData = async () => {
       try {
-        const lastMonthRes = await axios.get(`${API}/expenses/${lastMonth}/${lastYear}`);
-        setExpenses(prev => [...prev, ...lastMonthRes.data]);
-      } catch (e) {
-        // Last month might not exist
+        const budgetRes = await axios.get(`${API}/budget/${currentMonth}/${currentYear}`);
+        setBudget(budgetRes.data);
+
+        const expensesRes = await axios.get(`${API}/expenses/${currentMonth}/${currentYear}`);
+        setExpenses(expensesRes.data);
+
+        // Load last month expenses for comparison
+        const lastMonth = currentMonth === 1 ? 12 : currentMonth - 1;
+        const lastYear = currentMonth === 1 ? currentYear - 1 : currentYear;
+        try {
+          const lastMonthRes = await axios.get(`${API}/expenses/${lastMonth}/${lastYear}`);
+          setExpenses(prev => [...prev, ...lastMonthRes.data]);
+        } catch (e) {
+          // Last month might not exist
+        }
+      } catch (error) {
+        console.error('Failed to load data:', error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Failed to load data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+
+    loadData();
+  }, [currentMonth, currentYear]);
 
   const filteredExpenses = useMemo(() => {
     if (!expenses.length) return [];
