@@ -23,29 +23,26 @@ export default function StreakTracker({ expenses, budget, moneyLeft, daysLeft })
   useEffect(() => {
     // Calculate and update streak
     if (budget && expenses.length > 0) {
-      calculateStreak();
+      const safeDailySpend = daysLeft > 0 ? moneyLeft / daysLeft : 0;
+
+      // Get today's spending
+      const today = new Date().toISOString().split('T')[0];
+      const todayExpenses = expenses.filter(e => e.date === today);
+      const todaySpent = todayExpenses.reduce((sum, e) => sum + e.amount, 0);
+
+      // Check if under budget today
+      const isUnderBudget = todaySpent <= safeDailySpend;
+
+      // Update streak using functional update to avoid dependency on streak
+      setStreak(prevStreak => {
+        const currentStreak = isUnderBudget ? prevStreak.current + 1 : 0;
+        const bestStreak = Math.max(currentStreak, prevStreak.best);
+        const newStreak = { current: currentStreak, best: bestStreak };
+        localStorage.setItem('streak', JSON.stringify(newStreak));
+        return newStreak;
+      });
     }
   }, [expenses, budget, moneyLeft, daysLeft]);
-
-  const calculateStreak = () => {
-    const safeDailySpend = daysLeft > 0 ? moneyLeft / daysLeft : 0;
-    
-    // Get today's spending
-    const today = new Date().toISOString().split('T')[0];
-    const todayExpenses = expenses.filter(e => e.date === today);
-    const todaySpent = todayExpenses.reduce((sum, e) => sum + e.amount, 0);
-    
-    // Check if under budget today
-    const isUnderBudget = todaySpent <= safeDailySpend;
-    
-    // Update streak (simplified version - in production, check daily)
-    const currentStreak = isUnderBudget ? streak.current + 1 : 0;
-    const bestStreak = Math.max(currentStreak, streak.best);
-    
-    const newStreak = { current: currentStreak, best: bestStreak };
-    setStreak(newStreak);
-    localStorage.setItem('streak', JSON.stringify(newStreak));
-  };
 
   const nextMilestone = MILESTONES.find(m => m.days > streak.current);
   const daysToMilestone = nextMilestone ? nextMilestone.days - streak.current : 0;

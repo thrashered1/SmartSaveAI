@@ -11,28 +11,28 @@ export default function AIAssistant({ moneyLeft, daysLeft, burnRate, safeDailySp
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchAdvice();
-  }, []);
+    const fetchAdvice = async () => {
+      setLoading(true);
+      try {
+        const res = await axios.post(`${API}/ai-advice`, {
+          money_left: moneyLeft,
+          days_left: daysLeft,
+          burn_rate: burnRate,
+          safe_daily_spend: safeDailySpend,
+          expenses: expenses,
+          total_income: totalIncome,
+          total_spent: totalSpent
+        });
+        setAdvice(res.data.advice);
+      } catch (error) {
+        setAdvice("Can't connect to AI right now. Keep it tight, you got this! 💪");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const fetchAdvice = async () => {
-    setLoading(true);
-    try {
-      const res = await axios.post(`${API}/ai-advice`, {
-        money_left: moneyLeft,
-        days_left: daysLeft,
-        burn_rate: burnRate,
-        safe_daily_spend: safeDailySpend,
-        expenses: expenses,
-        total_income: totalIncome,
-        total_spent: totalSpent
-      });
-      setAdvice(res.data.advice);
-    } catch (error) {
-      setAdvice("Can't connect to AI right now. Keep it tight, you got this! 💪");
-    } finally {
-      setLoading(false);
-    }
-  };
+    fetchAdvice();
+  }, [moneyLeft, daysLeft, burnRate, safeDailySpend, expenses, totalIncome, totalSpent]);
 
   return (
     <div data-testid="ai-assistant">
