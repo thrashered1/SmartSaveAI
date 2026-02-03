@@ -11,6 +11,8 @@ import { toast } from 'sonner';
 import ExpenseList from '../components/ExpenseList';
 import CategoryBreakdown from '../components/CategoryBreakdown';
 import AIAssistant from '../components/AIAssistant';
+import StreakTracker from '../components/gamification/StreakTracker';
+import HealthScore from '../components/gamification/HealthScore';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
