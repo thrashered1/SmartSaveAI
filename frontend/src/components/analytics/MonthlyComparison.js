@@ -59,7 +59,15 @@ export default function MonthlyComparison({ currentExpenses, allExpenses }) {
       thisMonthName: format(thisMonthStart, 'MMMM'),
       lastMonthName: format(lastMonthStart, 'MMMM'),
     };
-  }, [currentExpenses, allExpenses]);
+  }, [allExpenses]);
+
+  if (!comparison) {
+    return (
+      <div className="bg-card border border-border/50 rounded-3xl p-6 animate-fade-in text-center text-muted-foreground" data-testid="monthly-comparison">
+        <p>Add more expenses to see monthly comparison</p>
+      </div>
+    );
+  }
 
   const isIncrease = comparison.difference > 0;
 
