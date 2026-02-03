@@ -1,16 +1,16 @@
 .App {
   min-height: 100vh;
-  background-color: #0A0A0A;
+  background-color: #000000;
 }
 
 .glass-card {
-  background: rgba(18, 18, 18, 0.6);
+  background: rgba(26, 26, 26, 0.6);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .glow-purple {
-  box-shadow: 0 0 30px rgba(121, 58, 255, 0.4);
+  box-shadow: 0 0 40px rgba(124, 58, 237, 0.3), 0 0 80px rgba(124, 58, 237, 0.1);
 }
 
 .animate-fade-in {
@@ -29,22 +29,23 @@
 }
 
 .category-icon {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 12px;
-  background: rgba(121, 58, 255, 0.1);
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(124, 58, 237, 0.1));
   color: #793AFF;
 }
 
 .stat-card {
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .stat-card:hover {
   transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(124, 58, 237, 0.15);
 }
 
 button {
@@ -52,5 +53,18 @@ button {
 }
 
 button:active {
-  transform: scale(0.95);
+  transform: scale(0.98);
+}
+
+.revolut-card {
+  background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.revolut-card:hover {
+  border-color: rgba(124, 58, 237, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(124, 58, 237, 0.15);
 }
