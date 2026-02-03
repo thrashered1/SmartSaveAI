@@ -271,64 +271,67 @@ export default function Dashboard({ onShowExpenseModal }) {
 
       {/* Add Expense Modal */}
       <Dialog open={showExpenseModal} onOpenChange={setShowExpenseModal}>
-        <DialogContent className="bg-[#1a1f3a] border-none max-w-md p-0 gap-0" data-testid="expense-modal">
-          <div className="p-6">
+        <DialogContent className="bg-black border border-white/10 max-w-md p-0 gap-0" data-testid="expense-modal">
+          <div className="p-8">
             {/* Header */}
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-white">Add Expense</h2>
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-3xl font-bold text-white">Add Expense</h2>
               <button
                 onClick={() => setShowExpenseModal(false)}
-                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+                className="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-all"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Amount Input */}
-            <div className="mb-6">
-              <Input
-                type="number"
-                step="0.01"
-                placeholder="0.00"
-                value={newExpense.amount}
-                onChange={(e) => setNewExpense({ ...newExpense, amount: e.target.value })}
-                className="bg-[#2a3150] border-transparent h-24 text-5xl font-bold text-center text-gray-300 placeholder:text-gray-500"
-                data-testid="expense-amount-input"
-              />
+            <div className="mb-8">
+              <div className="relative">
+                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-4xl font-bold text-white/30">€</span>
+                <Input
+                  type="number"
+                  step="0.01"
+                  placeholder="0.00"
+                  value={newExpense.amount}
+                  onChange={(e) => setNewExpense({ ...newExpense, amount: e.target.value })}
+                  className="bg-[#1a1a1a] border-white/10 h-28 text-6xl font-bold text-right pr-6 text-white placeholder:text-white/20"
+                  data-testid="expense-amount-input"
+                />
+              </div>
             </div>
 
             {/* Category Selection */}
-            <div className="mb-6">
-              <label className="text-[#9370DB] text-xs font-semibold uppercase mb-3 block">CATEGORY</label>
+            <div className="mb-8">
+              <label className="text-purple-400 text-xs font-bold uppercase tracking-wider mb-4 block">Category</label>
               <div className="grid grid-cols-2 gap-3">
                 {CATEGORIES.map((cat) => (
                   <button
                     key={cat.name}
                     onClick={() => setNewExpense({ ...newExpense, category: cat.name })}
-                    className={`flex items-center gap-3 p-4 rounded-2xl transition-all ${
+                    className={`flex items-center gap-3 p-4 rounded-xl transition-all ${
                       newExpense.category === cat.name
-                        ? 'bg-[#2a3150] ring-2 ring-primary'
-                        : 'bg-[#2a3150] hover:bg-[#3a4160]'
+                        ? 'bg-gradient-to-br from-purple-500/20 to-purple-600/20 ring-2 ring-purple-500'
+                        : 'bg-[#1a1a1a] hover:bg-[#222222] border border-white/5'
                     }`}
                     data-testid={`category-${cat.name.toLowerCase()}`}
                   >
-                    <div className={`w-12 h-12 rounded-xl ${cat.color} flex items-center justify-center text-2xl`}>
+                    <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${cat.color} flex items-center justify-center text-2xl shadow-lg`}>
                       {cat.icon}
                     </div>
-                    <span className="text-white font-medium">{cat.name}</span>
+                    <span className="text-white font-semibold text-sm">{cat.name}</span>
                   </button>
                 ))}
               </div>
             </div>
 
             {/* Note Input */}
-            <div className="mb-6">
-              <label className="text-[#9370DB] text-xs font-semibold uppercase mb-3 block">NOTE (OPTIONAL)</label>
+            <div className="mb-8">
+              <label className="text-purple-400 text-xs font-bold uppercase tracking-wider mb-4 block">Note (Optional)</label>
               <Input
                 placeholder="What did you buy?"
                 value={newExpense.note}
                 onChange={(e) => setNewExpense({ ...newExpense, note: e.target.value })}
-                className="bg-[#2a3150] border-transparent h-12 text-gray-300 placeholder:text-gray-500"
+                className="bg-[#1a1a1a] border-white/10 h-14 text-white placeholder:text-white/30"
                 data-testid="expense-note-input"
               />
             </div>
@@ -336,10 +339,10 @@ export default function Dashboard({ onShowExpenseModal }) {
             {/* Submit Button */}
             <Button
               onClick={addExpense}
-              className="w-full h-14 text-lg font-bold rounded-full bg-gradient-to-r from-[#00D4FF] to-[#FF1CF7] hover:opacity-90"
+              className="w-full h-16 text-lg font-bold rounded-xl bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 shadow-lg shadow-purple-500/20"
               data-testid="submit-expense-btn"
             >
-              I SPENT THIS 😭
+              Add Expense
             </Button>
           </div>
         </DialogContent>
