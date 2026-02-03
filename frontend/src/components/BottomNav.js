@@ -1,4 +1,4 @@
-import { Home, TrendingUp, Plus, Settings } from 'lucide-react';
+import { Home, TrendingUp, Plus, Target } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function BottomNav({ onAddExpense }) {
@@ -13,7 +13,7 @@ export default function BottomNav({ onAddExpense }) {
     { icon: Home, label: 'Home', path: '/', testId: 'nav-home' },
     { icon: TrendingUp, label: 'Insights', path: '/insights', testId: 'nav-insights' },
     { icon: Plus, label: 'Add', isAction: true, testId: 'nav-add' },
-    { icon: Settings, label: 'Settings', path: '/settings', testId: 'nav-settings' },
+    { icon: Target, label: 'Goals', path: '/goals', testId: 'nav-goals' },
   ];
 
   return (
