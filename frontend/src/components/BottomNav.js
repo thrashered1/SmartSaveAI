@@ -18,7 +18,7 @@ export default function BottomNav({ onAddExpense }) {
 
   return (
     <div className="fixed bottom-6 left-0 right-0 px-6 z-50">
-      <div className="max-w-md mx-auto bg-[#1A1A1A]/90 backdrop-blur-lg border border-white/5 rounded-full h-16 flex items-center justify-around px-2 shadow-2xl">
+      <div className="max-w-md mx-auto glass-morphism rounded-2xl h-18 flex items-center justify-around px-4 shadow-2xl shadow-black/40">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = location.pathname === tab.path;
@@ -34,13 +34,13 @@ export default function BottomNav({ onAddExpense }) {
                   handleNavigation(tab.path);
                 }
               }}
-              className={`flex flex-col items-center justify-center gap-1 px-4 py-2 rounded-full transition-colors ${
-                isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
-              } ${tab.isAction ? 'bg-primary text-white scale-110' : ''}`}
+              className={`flex flex-col items-center justify-center gap-1.5 px-6 py-3 rounded-xl transition-all ${
+                isActive ? 'text-purple-400' : 'text-gray-400 hover:text-white'
+              } ${tab.isAction ? 'bg-gradient-to-r from-purple-600 to-purple-500 text-white scale-105 shadow-lg shadow-purple-500/30' : ''}`}
               data-testid={tab.testId}
             >
-              <Icon className={`w-5 h-5 ${tab.label === 'Add' ? 'w-6 h-6' : ''}`} />
-              <span className="text-[10px] font-medium">{tab.label}</span>
+              <Icon className={`w-5 h-5 ${tab.label === 'Add' ? 'w-5 h-5' : ''}`} />
+              <span className="text-[9px] font-semibold uppercase tracking-wider">{tab.label}</span>
             </button>
           );
         })}
