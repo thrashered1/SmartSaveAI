@@ -186,34 +186,35 @@ export default function Dashboard({ onShowExpenseModal }) {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 gap-4 mb-6 animate-fade-in">
-        <div className="bg-card border border-border/50 rounded-3xl p-5 stat-card" data-testid="days-left-card">
-          <div className="flex items-center gap-2 mb-2">
-            <Calendar className="w-4 h-4 text-primary" />
-            <span className="text-xs text-muted-foreground">Days Left</span>
+      <div className="grid grid-cols-3 gap-4 mb-8 animate-fade-in">
+        <div className="premium-card p-6 stat-card" data-testid="days-left-card">
+          <div className="flex items-center gap-2 mb-3">
+            <Calendar className="w-4 h-4 text-purple-400" />
+            <span className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">Days Left</span>
           </div>
-          <div className="text-3xl font-bold" data-testid="days-left-value">{daysLeft}</div>
+          <div className="text-4xl font-bold number-display" data-testid="days-left-value">{daysLeft}</div>
+          <div className="text-xs text-muted-foreground mt-1">in month</div>
         </div>
 
-        <div className="bg-card border border-border/50 rounded-3xl p-5 stat-card" data-testid="burn-rate-card">
-          <div className="flex items-center gap-2 mb-2">
-            <TrendingDown className="w-4 h-4 text-destructive" />
-            <span className="text-xs text-muted-foreground">Burn Rate</span>
+        <div className="premium-card p-6 stat-card" data-testid="burn-rate-card">
+          <div className="flex items-center gap-2 mb-3">
+            <TrendingDown className="w-4 h-4 text-red-400" />
+            <span className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">Burn Rate</span>
           </div>
-          <div className="text-3xl font-bold" data-testid="burn-rate-value">€{burnRate.toFixed(1)}</div>
-          <div className="text-xs text-muted-foreground">per day</div>
+          <div className="text-4xl font-bold number-display" data-testid="burn-rate-value">€{burnRate.toFixed(1)}</div>
+          <div className="text-xs text-muted-foreground mt-1">per day</div>
         </div>
 
-        <div className="bg-card border border-border/50 rounded-3xl p-5 stat-card col-span-2" data-testid="safe-daily-spend-card">
-          <div className="flex items-center gap-2 mb-2">
-            <Zap className={`w-4 h-4 ${safeDailySpend < 0 ? 'text-destructive' : 'text-success'}`} />
-            <span className="text-xs text-muted-foreground">Safe Daily Spend</span>
+        <div className="premium-card p-6 stat-card" data-testid="safe-daily-spend-card">
+          <div className="flex items-center gap-2 mb-3">
+            <Zap className={`w-4 h-4 ${safeDailySpend < 0 ? 'text-red-400' : 'text-green-400'}`} />
+            <span className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">Daily Budget</span>
           </div>
-          <div className={`text-4xl font-bold ${safeDailySpend < 0 ? 'text-destructive' : 'text-success'}`} data-testid="safe-daily-spend-value">
+          <div className={`text-4xl font-bold number-display ${safeDailySpend < 0 ? 'text-red-400' : 'text-green-400'}`} data-testid="safe-daily-spend-value">
             €{safeDailySpend.toFixed(2)}
           </div>
           {safeDailySpend < 0 && (
-            <div className="text-xs text-destructive mt-1">⚠️ Budget exceeded!</div>
+            <div className="text-xs text-red-400 mt-1 font-medium">Budget exceeded</div>
           )}
         </div>
       </div>
