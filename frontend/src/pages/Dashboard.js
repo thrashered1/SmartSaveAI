@@ -213,7 +213,7 @@ export default function Dashboard({ onShowExpenseModal }) {
       </div>
 
       {/* Action Buttons */}
-      <div className="grid grid-cols-3 gap-3 mb-6 animate-fade-in">
+      <div className="grid grid-cols-4 gap-3 mb-6 animate-fade-in">
         <Button
           onClick={() => setShowExpenseModal(true)}
           className="bg-primary hover:bg-primary/90 h-12 rounded-full font-medium shadow-lg shadow-primary/20"
@@ -221,6 +221,14 @@ export default function Dashboard({ onShowExpenseModal }) {
         >
           <Plus className="w-4 h-4 mr-2" />
           Expense
+        </Button>
+        <Button
+          onClick={() => setShowIncomeModal(true)}
+          className="bg-success hover:bg-success/90 h-12 rounded-full font-medium shadow-lg shadow-success/20"
+          data-testid="add-income-btn"
+        >
+          <ArrowDownCircle className="w-4 h-4 mr-2" />
+          Income
         </Button>
         <Button
           onClick={() => setShowAIModal(true)}
@@ -238,7 +246,7 @@ export default function Dashboard({ onShowExpenseModal }) {
           data-testid="insights-btn"
         >
           <PieChart className="w-4 h-4 mr-2" />
-          Insights
+          Stats
         </Button>
       </div>
 
