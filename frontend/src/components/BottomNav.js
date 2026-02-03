@@ -5,10 +5,14 @@ export default function BottomNav({ onAddExpense }) {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const handleNavigation = (path) => {
+    if (path) navigate(path);
+  };
+
   const tabs = [
     { icon: Home, label: 'Home', path: '/', testId: 'nav-home' },
     { icon: TrendingUp, label: 'Insights', path: '/insights', testId: 'nav-insights' },
-    { icon: Plus, label: 'Add', action: onAddExpense, testId: 'nav-add' },
+    { icon: Plus, label: 'Add', isAction: true, testId: 'nav-add' },
     { icon: Settings, label: 'Settings', path: '/settings', testId: 'nav-settings' },
   ];
 
@@ -22,10 +26,17 @@ export default function BottomNav({ onAddExpense }) {
           return (
             <button
               key={tab.label}
-              onClick={() => tab.action ? tab.action() : navigate(tab.path)}
+              onClick={() => {
+                if (tab.isAction) {
+                  // Trigger add expense on Dashboard
+                  window.dispatchEvent(new CustomEvent('openExpenseModal'));
+                } else {
+                  handleNavigation(tab.path);
+                }
+              }}
               className={`flex flex-col items-center justify-center gap-1 px-4 py-2 rounded-full transition-colors ${
                 isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
-              }`}
+              } ${tab.isAction ? 'bg-primary text-white scale-110' : ''}`}
               data-testid={tab.testId}
             >
               <Icon className={`w-5 h-5 ${tab.label === 'Add' ? 'w-6 h-6' : ''}`} />
