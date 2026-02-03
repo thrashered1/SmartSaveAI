@@ -267,7 +267,7 @@ export default function Dashboard({ onShowExpenseModal }) {
 
       {/* Add Expense Modal */}
       <Dialog open={showExpenseModal} onOpenChange={setShowExpenseModal}>
-        <DialogContent className="bg-black border border-white/10 max-w-md p-0 gap-0" data-testid="expense-modal">
+        <DialogContent className="bg-black border border-white/10 max-w-lg p-0 gap-0" data-testid="expense-modal">
           <div className="p-8">
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
