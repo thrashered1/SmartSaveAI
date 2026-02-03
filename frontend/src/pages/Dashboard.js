@@ -271,66 +271,86 @@ export default function Dashboard({ onShowExpenseModal }) {
 
       {/* Add Expense Modal */}
       <Dialog open={showExpenseModal} onOpenChange={setShowExpenseModal}>
-        <DialogContent className="bg-card border-border" data-testid="expense-modal" aria-describedby="expense-dialog-description">
-          <DialogHeader>
-            <DialogTitle>Add Expense</DialogTitle>
-          </DialogHeader>
-          <div id="expense-dialog-description" className="sr-only">Add a new expense to track your spending</div>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="amount">Amount (€)</Label>
+        <DialogContent className="bg-[#1a1f3a] border-none max-w-md p-0 gap-0" data-testid="expense-modal">
+          <div className="p-6">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-white">Add Expense</h2>
+              <button
+                onClick={() => setShowExpenseModal(false)}
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Amount Input */}
+            <div className="mb-6">
               <Input
-                id="amount"
                 type="number"
                 step="0.01"
                 placeholder="0.00"
                 value={newExpense.amount}
                 onChange={(e) => setNewExpense({ ...newExpense, amount: e.target.value })}
-                className="mt-1"
+                className="bg-[#2a3150] border-transparent h-24 text-5xl font-bold text-center text-gray-300 placeholder:text-gray-500"
                 data-testid="expense-amount-input"
               />
             </div>
-            <div>
-              <Label htmlFor="category">Category</Label>
-              <Select value={newExpense.category} onValueChange={(val) => setNewExpense({ ...newExpense, category: val })}>
-                <SelectTrigger className="mt-1" data-testid="expense-category-select">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {CATEGORIES.map(cat => (
-                    <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+
+            {/* Category Selection */}
+            <div className="mb-6">
+              <label className="text-[#9370DB] text-xs font-semibold uppercase mb-3 block">CATEGORY</label>
+              <div className="grid grid-cols-2 gap-3">
+                {CATEGORIES.map((cat) => (
+                  <button
+                    key={cat.name}
+                    onClick={() => setNewExpense({ ...newExpense, category: cat.name })}
+                    className={`flex items-center gap-3 p-4 rounded-2xl transition-all ${
+                      newExpense.category === cat.name
+                        ? 'bg-[#2a3150] ring-2 ring-primary'
+                        : 'bg-[#2a3150] hover:bg-[#3a4160]'
+                    }`}
+                    data-testid={`category-${cat.name.toLowerCase()}`}
+                  >
+                    <div className={`w-12 h-12 rounded-xl ${cat.color} flex items-center justify-center text-2xl`}>
+                      {cat.icon}
+                    </div>
+                    <span className="text-white font-medium">{cat.name}</span>
+                  </button>
+                ))}
+              </div>
             </div>
-            <div>
-              <Label htmlFor="note">Note (optional)</Label>
+
+            {/* Note Input */}
+            <div className="mb-6">
+              <label className="text-[#9370DB] text-xs font-semibold uppercase mb-3 block">NOTE (OPTIONAL)</label>
               <Input
-                id="note"
                 placeholder="What did you buy?"
                 value={newExpense.note}
                 onChange={(e) => setNewExpense({ ...newExpense, note: e.target.value })}
-                className="mt-1"
+                className="bg-[#2a3150] border-transparent h-12 text-gray-300 placeholder:text-gray-500"
                 data-testid="expense-note-input"
               />
             </div>
-            <div>
-              <Label htmlFor="date">Date</Label>
-              <Input
-                id="date"
-                type="date"
-                value={newExpense.date}
-                onChange={(e) => setNewExpense({ ...newExpense, date: e.target.value })}
-                className="mt-1"
-                data-testid="expense-date-input"
-              />
-            </div>
-            <Button onClick={addExpense} className="w-full" data-testid="submit-expense-btn">
-              I spent this 😭
+
+            {/* Submit Button */}
+            <Button
+              onClick={addExpense}
+              className="w-full h-14 text-lg font-bold rounded-full bg-gradient-to-r from-[#00D4FF] to-[#FF1CF7] hover:opacity-90"
+              data-testid="submit-expense-btn"
+            >
+              I SPENT THIS 😭
             </Button>
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Add Income Modal */}
+      <AddIncomeModal
+        open={showIncomeModal}
+        onClose={() => setShowIncomeModal(false)}
+        onAddIncome={addIncome}
+      />
 
       {/* AI Assistant Modal */}
       <Dialog open={showAIModal} onOpenChange={setShowAIModal}>
