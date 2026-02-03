@@ -20,12 +20,12 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 const CATEGORIES = [
-  { name: 'Food', icon: '\ud83c\udf54', color: 'bg-[#FF6B6B]' },
-  { name: 'Transport', icon: '\ud83d\ude97', color: 'bg-[#4ECDC4]' },
-  { name: 'Rent', icon: '\ud83c\udfe0', color: 'bg-[#95E1D3]' },
-  { name: 'Fun', icon: '\ud83c\udf89', color: 'bg-[#F38181]' },
-  { name: 'Shopping', icon: '\ud83d\uded2', color: 'bg-[#AA96DA]' },
-  { name: 'Other', icon: '\ud83d\udce6', color: 'bg-[#FCBAD3]' },
+  { name: 'Food', icon: '\ud83c\udf54', color: 'from-red-500 to-orange-500' },
+  { name: 'Transport', icon: '\ud83d\ude97', color: 'from-blue-500 to-cyan-500' },
+  { name: 'Rent', icon: '\ud83c\udfe0', color: 'from-green-500 to-emerald-500' },
+  { name: 'Fun', icon: '\ud83c\udf89', color: 'from-pink-500 to-rose-500' },
+  { name: 'Shopping', icon: '\ud83d\uded2', color: 'from-purple-500 to-violet-500' },
+  { name: 'Other', icon: '\ud83d\udce6', color: 'from-gray-500 to-slate-500' },
 ];
 
 export default function Dashboard({ onShowExpenseModal }) {
