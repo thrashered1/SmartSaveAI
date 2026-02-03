@@ -30,10 +30,18 @@ export default function CreateGoalModal({ open, onClose, onCreate }) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="bg-[#1a1f3a] border-border max-w-md" data-testid="create-goal-modal">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">Create Goal</DialogTitle>
-        </DialogHeader>
+      <DialogContent className="bg-black border border-white/10 max-w-md p-0 gap-0" data-testid="create-goal-modal">
+        <div className="p-8">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-3xl font-bold text-white">Create Goal</h2>
+            <button
+              onClick={onClose}
+              className="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-all"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
 
         <div className="space-y-5 mt-4">
           {/* Goal Name */}
