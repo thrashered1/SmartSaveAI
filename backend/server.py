@@ -1,15 +1,18 @@
-from fastapi import FastAPI, APIRouter, HTTPException
+from fastapi import FastAPI, APIRouter, HTTPException, Depends
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
 from pathlib import Path
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field, ConfigDict, EmailStr
 from typing import List, Optional
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from emergentintegrations.llm.chat import LlmChat, UserMessage
+import jwt
+import bcrypt
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -20,19 +23,89 @@ db = client[os.environ['DB_NAME']]
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
+security = HTTPBearer()
 
-# Models
+JWT_SECRET = os.environ.get('JWT_SECRET', 'your-secret-key-change-in-production')
+JWT_ALGORITHM = 'HS256'
+
+# Auth Models
+class UserRegister(BaseModel):
+    email: EmailStr
+    password: str
+    name: str
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+
+class User(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    email: str
+    name: str
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+# Auth Functions
+def hash_password(password: str) -> str:
+    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+def verify_password(password: str, hashed: str) -> bool:
+    return bcrypt.checkpw(password.encode('utf-8'), hashed.encode('utf-8'))
+
+def create_token(user_id: str) -> str:
+    payload = {
+        'user_id': user_id,
+        'exp': datetime.now(timezone.utc) + timedelta(days=30)
+    }
+    return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
+
+async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)) -> str:
+    try:
+        token = credentials.credentials
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        return payload['user_id']
+    except:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+# Auth Routes
+@api_router.post("/auth/register")
+async def register(user_data: UserRegister):
+    existing = await db.users.find_one({"email": user_data.email})
+    if existing:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    
+    user = User(email=user_data.email, name=user_data.name)
+    doc = user.model_dump()
+    doc['password'] = hash_password(user_data.password)
+    doc['created_at'] = doc['created_at'].isoformat()
+    
+    await db.users.insert_one(doc)
+    token = create_token(user.id)
+    
+    return {"token": token, "user": {"id": user.id, "email": user.email, "name": user.name}}
+
+@api_router.post("/auth/login")
+async def login(credentials: UserLogin):
+    user = await db.users.find_one({"email": credentials.email}, {"_id": 0})
+    if not user or not verify_password(credentials.password, user['password']):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    
+    token = create_token(user['id'])
+    return {"token": token, "user": {"id": user['id'], "email": user['email'], "name": user['name']}}
+
+# Existing Models (add user_id)
 class IncomeSource(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
     amount: float
-    frequency: Optional[str] = "one-time"  # "one-time" or "monthly"
+    frequency: Optional[str] = "one-time"
     note: Optional[str] = None
 
 class MonthlyBudget(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
     month: str
     year: int
     income_sources: List[IncomeSource]
@@ -47,6 +120,7 @@ class MonthlyBudgetCreate(BaseModel):
 class Expense(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
     amount: float
     category: str
     note: Optional[str] = None
@@ -62,17 +136,18 @@ class ExpenseCreate(BaseModel):
 class GoalTransaction(BaseModel):
     amount: float
     date: str
-    source: str  # "income" or "transfer"
+    source: str
 
 class Goal(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
     name: str
     icon: str
     target_amount: float
     current_amount: float = 0.0
     deadline: Optional[str] = None
-    priority: str = "medium"  # low, medium, high
+    priority: str = "medium"
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     completed_at: Optional[datetime] = None
     transactions: List[GoalTransaction] = []
@@ -106,9 +181,10 @@ async def root():
     return {"message": "SmartSaveAI API"}
 
 @api_router.post("/budget", response_model=MonthlyBudget)
-async def create_budget(budget_input: MonthlyBudgetCreate):
+async def create_budget(budget_input: MonthlyBudgetCreate, user_id: str = Depends(get_current_user)):
     total = sum(source.amount for source in budget_input.income_sources)
     budget_obj = MonthlyBudget(
+        user_id=user_id,
         month=budget_input.month,
         year=budget_input.year,
         income_sources=budget_input.income_sources,
@@ -123,8 +199,8 @@ async def create_budget(budget_input: MonthlyBudgetCreate):
     return budget_obj
 
 @api_router.get("/budget/{month}/{year}", response_model=MonthlyBudget)
-async def get_budget(month: str, year: int):
-    budget = await db.budgets.find_one({"month": month, "year": year}, {"_id": 0})
+async def get_budget(month: str, year: int, user_id: str = Depends(get_current_user)):
+    budget = await db.budgets.find_one({"user_id": user_id, "month": month, "year": year}, {"_id": 0})
     if not budget:
         raise HTTPException(status_code=404, detail="Budget not found")
     
@@ -134,21 +210,18 @@ async def get_budget(month: str, year: int):
     return budget
 
 @api_router.put("/budget/{month}/{year}")
-async def update_budget(month: str, year: int, update_data: dict):
-    existing = await db.budgets.find_one({"month": month, "year": year})
+async def update_budget(month: str, year: int, update_data: dict, user_id: str = Depends(get_current_user)):
+    existing = await db.budgets.find_one({"user_id": user_id, "month": month, "year": year})
     if not existing:
         raise HTTPException(status_code=404, detail="Budget not found")
     
-    await db.budgets.update_one(
-        {"month": month, "year": year},
-        {"$set": update_data}
-    )
-    
+    await db.budgets.update_one({"user_id": user_id, "month": month, "year": year}, {"$set": update_data})
     return {"message": "Budget updated"}
 
 @api_router.post("/expenses", response_model=Expense)
-async def create_expense(expense_input: ExpenseCreate):
+async def create_expense(expense_input: ExpenseCreate, user_id: str = Depends(get_current_user)):
     expense_obj = Expense(
+        user_id=user_id,
         amount=expense_input.amount,
         category=expense_input.category,
         note=expense_input.note,
@@ -162,8 +235,8 @@ async def create_expense(expense_input: ExpenseCreate):
     return expense_obj
 
 @api_router.get("/expenses/{month}/{year}", response_model=List[Expense])
-async def get_expenses(month: str, year: int):
-    expenses = await db.expenses.find({}, {"_id": 0}).to_list(1000)
+async def get_expenses(month: str, year: int, user_id: str = Depends(get_current_user)):
+    expenses = await db.expenses.find({"user_id": user_id}, {"_id": 0}).to_list(1000)
     
     filtered_expenses = []
     for exp in expenses:
@@ -177,16 +250,16 @@ async def get_expenses(month: str, year: int):
     return filtered_expenses
 
 @api_router.delete("/expenses/{expense_id}")
-async def delete_expense(expense_id: str):
-    result = await db.expenses.delete_one({"id": expense_id})
+async def delete_expense(expense_id: str, user_id: str = Depends(get_current_user)):
+    result = await db.expenses.delete_one({"user_id": user_id, "id": expense_id})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Expense not found")
     return {"message": "Expense deleted"}
 
-# Goals endpoints
 @api_router.post("/goals", response_model=Goal)
-async def create_goal(goal_input: GoalCreate):
+async def create_goal(goal_input: GoalCreate, user_id: str = Depends(get_current_user)):
     goal_obj = Goal(
+        user_id=user_id,
         name=goal_input.name,
         icon=goal_input.icon,
         target_amount=goal_input.target_amount,
@@ -201,8 +274,8 @@ async def create_goal(goal_input: GoalCreate):
     return goal_obj
 
 @api_router.get("/goals", response_model=List[Goal])
-async def get_goals():
-    goals = await db.goals.find({}, {"_id": 0}).to_list(100)
+async def get_goals(user_id: str = Depends(get_current_user)):
+    goals = await db.goals.find({"user_id": user_id}, {"_id": 0}).to_list(100)
     
     for goal in goals:
         if isinstance(goal['created_at'], str):
@@ -213,8 +286,8 @@ async def get_goals():
     return goals
 
 @api_router.get("/goals/{goal_id}", response_model=Goal)
-async def get_goal(goal_id: str):
-    goal = await db.goals.find_one({"id": goal_id}, {"_id": 0})
+async def get_goal(goal_id: str, user_id: str = Depends(get_current_user)):
+    goal = await db.goals.find_one({"user_id": user_id, "id": goal_id}, {"_id": 0})
     if not goal:
         raise HTTPException(status_code=404, detail="Goal not found")
     
@@ -226,23 +299,23 @@ async def get_goal(goal_id: str):
     return goal
 
 @api_router.put("/goals/{goal_id}", response_model=Goal)
-async def update_goal(goal_id: str, goal_input: GoalCreate):
-    existing = await db.goals.find_one({"id": goal_id}, {"_id": 0})
+async def update_goal(goal_id: str, goal_input: GoalCreate, user_id: str = Depends(get_current_user)):
+    existing = await db.goals.find_one({"user_id": user_id, "id": goal_id}, {"_id": 0})
     if not existing:
         raise HTTPException(status_code=404, detail="Goal not found")
     
     update_data = goal_input.model_dump()
-    await db.goals.update_one({"id": goal_id}, {"$set": update_data})
+    await db.goals.update_one({"user_id": user_id, "id": goal_id}, {"$set": update_data})
     
-    updated_goal = await db.goals.find_one({"id": goal_id}, {"_id": 0})
+    updated_goal = await db.goals.find_one({"user_id": user_id, "id": goal_id}, {"_id": 0})
     if isinstance(updated_goal['created_at'], str):
         updated_goal['created_at'] = datetime.fromisoformat(updated_goal['created_at'])
     
     return updated_goal
 
 @api_router.post("/goals/{goal_id}/add-money")
-async def add_money_to_goal(goal_id: str, money_input: GoalAddMoney):
-    goal = await db.goals.find_one({"id": goal_id}, {"_id": 0})
+async def add_money_to_goal(goal_id: str, money_input: GoalAddMoney, user_id: str = Depends(get_current_user)):
+    goal = await db.goals.find_one({"user_id": user_id, "id": goal_id}, {"_id": 0})
     if not goal:
         raise HTTPException(status_code=404, detail="Goal not found")
     
@@ -263,19 +336,22 @@ async def add_money_to_goal(goal_id: str, money_input: GoalAddMoney):
     if is_completed:
         update_data["completed_at"] = datetime.now(timezone.utc).isoformat()
     
-    await db.goals.update_one({"id": goal_id}, {"$set": {"current_amount": new_amount, "completed_at": update_data.get("completed_at")}, "$push": {"transactions": transaction}})
+    await db.goals.update_one(
+        {"user_id": user_id, "id": goal_id},
+        {"$set": {"current_amount": new_amount, "completed_at": update_data.get("completed_at")}, "$push": {"transactions": transaction}}
+    )
     
     return {"message": "Money added", "new_amount": new_amount, "completed": is_completed}
 
 @api_router.delete("/goals/{goal_id}")
-async def delete_goal(goal_id: str):
-    result = await db.goals.delete_one({"id": goal_id})
+async def delete_goal(goal_id: str, user_id: str = Depends(get_current_user)):
+    result = await db.goals.delete_one({"user_id": user_id, "id": goal_id})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Goal not found")
     return {"message": "Goal deleted"}
 
 @api_router.post("/ai-advice", response_model=AIAdviceResponse)
-async def get_ai_advice(request: AIAdviceRequest):
+async def get_ai_advice(request: AIAdviceRequest, user_id: str = Depends(get_current_user)):
     api_key = os.environ.get('EMERGENT_LLM_KEY')
     if not api_key:
         raise HTTPException(status_code=500, detail="API key not configured")
