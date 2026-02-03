@@ -133,6 +133,19 @@ async def get_budget(month: str, year: int):
     
     return budget
 
+@api_router.put("/budget/{month}/{year}")
+async def update_budget(month: str, year: int, update_data: dict):
+    existing = await db.budgets.find_one({"month": month, "year": year})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Budget not found")
+    
+    await db.budgets.update_one(
+        {"month": month, "year": year},
+        {"$set": update_data}
+    )
+    
+    return {"message": "Budget updated"}
+
 @api_router.post("/expenses", response_model=Expense)
 async def create_expense(expense_input: ExpenseCreate):
     expense_obj = Expense(
