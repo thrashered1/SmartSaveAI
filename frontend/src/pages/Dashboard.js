@@ -210,7 +210,7 @@ export default function Dashboard({ onShowExpenseModal }) {
       </div>
 
       {/* Gamification Components */}
-      <div className=\"space-y-4 mb-6 animate-fade-in\">
+      <div className="space-y-4 mb-6 animate-fade-in">
         <StreakTracker 
           expenses={expenses} 
           budget={budget} 
