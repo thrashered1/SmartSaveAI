@@ -5,7 +5,7 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { toast } from 'sonner';
 import { useAuth } from '../context/AuthContext';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Eye, EyeOff } from 'lucide-react';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -14,6 +14,7 @@ export default function Auth() {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -84,14 +85,23 @@ export default function Auth() {
             
             <div>
               <label className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">Password</label>
-              <Input
-                type="password"
-                placeholder="••••••••"
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="bg-black/50 border-white/10 h-12"
-                required
-              />
+              <div className="relative">
+                <Input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="••••••••"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  className="bg-black/50 border-white/10 h-12 pr-12"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-white transition-colors"
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
             </div>
 
             <Button
