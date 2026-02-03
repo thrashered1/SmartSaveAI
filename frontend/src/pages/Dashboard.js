@@ -220,40 +220,30 @@ export default function Dashboard({ onShowExpenseModal }) {
       </div>
 
       {/* Action Buttons */}
-      <div className="grid grid-cols-4 gap-3 mb-6 animate-fade-in">
+      <div className="grid grid-cols-3 gap-4 mb-8 animate-fade-in">
+        <Button
+          onClick={() => setShowAIModal(true)}
+          className="h-14 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 font-semibold"
+          data-testid="ai-advice-btn"
+        >
+          <Sparkles className="w-4 h-4 mr-2" />
+          AI Insights
+        </Button>
+        <Button
+          onClick={() => setShowCategoryModal(true)}
+          className="h-14 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 font-semibold"
+          data-testid="insights-btn"
+        >
+          <PieChart className="w-4 h-4 mr-2" />
+          Analytics
+        </Button>
         <Button
           onClick={() => setShowExpenseModal(true)}
-          className="bg-primary hover:bg-primary/90 h-12 rounded-full font-medium shadow-lg shadow-primary/20"
+          className="h-14 rounded-xl bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-600 shadow-lg shadow-purple-500/25 font-semibold"
           data-testid="add-expense-btn"
         >
           <Plus className="w-4 h-4 mr-2" />
           Expense
-        </Button>
-        <Button
-          onClick={() => setShowIncomeModal(true)}
-          className="bg-success hover:bg-success/90 h-12 rounded-full font-medium shadow-lg shadow-success/20"
-          data-testid="add-income-btn"
-        >
-          <ArrowDownCircle className="w-4 h-4 mr-2" />
-          Income
-        </Button>
-        <Button
-          onClick={() => setShowAIModal(true)}
-          variant="secondary"
-          className="h-12 rounded-full font-medium"
-          data-testid="ai-advice-btn"
-        >
-          <Sparkles className="w-4 h-4 mr-2" />
-          AI
-        </Button>
-        <Button
-          onClick={() => setShowCategoryModal(true)}
-          variant="secondary"
-          className="h-12 rounded-full font-medium"
-          data-testid="insights-btn"
-        >
-          <PieChart className="w-4 h-4 mr-2" />
-          Stats
         </Button>
       </div>
 
