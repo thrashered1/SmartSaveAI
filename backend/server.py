@@ -27,6 +27,8 @@ class IncomeSource(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
     amount: float
+    frequency: Optional[str] = "one-time"  # "one-time" or "monthly"
+    note: Optional[str] = None
 
 class MonthlyBudget(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -56,6 +58,35 @@ class ExpenseCreate(BaseModel):
     category: str
     note: Optional[str] = None
     date: str
+
+class GoalTransaction(BaseModel):
+    amount: float
+    date: str
+    source: str  # "income" or "transfer"
+
+class Goal(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    icon: str
+    target_amount: float
+    current_amount: float = 0.0
+    deadline: Optional[str] = None
+    priority: str = "medium"  # low, medium, high
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    completed_at: Optional[datetime] = None
+    transactions: List[GoalTransaction] = []
+
+class GoalCreate(BaseModel):
+    name: str
+    icon: str
+    target_amount: float
+    deadline: Optional[str] = None
+    priority: str = "medium"
+
+class GoalAddMoney(BaseModel):
+    amount: float
+    source: str = "income"
 
 class AIAdviceRequest(BaseModel):
     money_left: float
@@ -138,6 +169,97 @@ async def delete_expense(expense_id: str):
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Expense not found")
     return {"message": "Expense deleted"}
+
+# Goals endpoints
+@api_router.post("/goals", response_model=Goal)
+async def create_goal(goal_input: GoalCreate):
+    goal_obj = Goal(
+        name=goal_input.name,
+        icon=goal_input.icon,
+        target_amount=goal_input.target_amount,
+        deadline=goal_input.deadline,
+        priority=goal_input.priority
+    )
+    
+    doc = goal_obj.model_dump()
+    doc['created_at'] = doc['created_at'].isoformat()
+    
+    await db.goals.insert_one(doc)
+    return goal_obj
+
+@api_router.get("/goals", response_model=List[Goal])
+async def get_goals():
+    goals = await db.goals.find({}, {"_id": 0}).to_list(100)
+    
+    for goal in goals:
+        if isinstance(goal['created_at'], str):
+            goal['created_at'] = datetime.fromisoformat(goal['created_at'])
+        if goal.get('completed_at') and isinstance(goal['completed_at'], str):
+            goal['completed_at'] = datetime.fromisoformat(goal['completed_at'])
+    
+    return goals
+
+@api_router.get("/goals/{goal_id}", response_model=Goal)
+async def get_goal(goal_id: str):
+    goal = await db.goals.find_one({"id": goal_id}, {"_id": 0})
+    if not goal:
+        raise HTTPException(status_code=404, detail="Goal not found")
+    
+    if isinstance(goal['created_at'], str):
+        goal['created_at'] = datetime.fromisoformat(goal['created_at'])
+    if goal.get('completed_at') and isinstance(goal['completed_at'], str):
+        goal['completed_at'] = datetime.fromisoformat(goal['completed_at'])
+    
+    return goal
+
+@api_router.put("/goals/{goal_id}", response_model=Goal)
+async def update_goal(goal_id: str, goal_input: GoalCreate):
+    existing = await db.goals.find_one({"id": goal_id}, {"_id": 0})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Goal not found")
+    
+    update_data = goal_input.model_dump()
+    await db.goals.update_one({"id": goal_id}, {"$set": update_data})
+    
+    updated_goal = await db.goals.find_one({"id": goal_id}, {"_id": 0})
+    if isinstance(updated_goal['created_at'], str):
+        updated_goal['created_at'] = datetime.fromisoformat(updated_goal['created_at'])
+    
+    return updated_goal
+
+@api_router.post("/goals/{goal_id}/add-money")
+async def add_money_to_goal(goal_id: str, money_input: GoalAddMoney):
+    goal = await db.goals.find_one({"id": goal_id}, {"_id": 0})
+    if not goal:
+        raise HTTPException(status_code=404, detail="Goal not found")
+    
+    new_amount = goal['current_amount'] + money_input.amount
+    transaction = {
+        "amount": money_input.amount,
+        "date": datetime.now(timezone.utc).isoformat(),
+        "source": money_input.source
+    }
+    
+    is_completed = new_amount >= goal['target_amount'] and not goal.get('completed_at')
+    
+    update_data = {
+        "current_amount": new_amount,
+        "$push": {"transactions": transaction}
+    }
+    
+    if is_completed:
+        update_data["completed_at"] = datetime.now(timezone.utc).isoformat()
+    
+    await db.goals.update_one({"id": goal_id}, {"$set": {"current_amount": new_amount, "completed_at": update_data.get("completed_at")}, "$push": {"transactions": transaction}})
+    
+    return {"message": "Money added", "new_amount": new_amount, "completed": is_completed}
+
+@api_router.delete("/goals/{goal_id}")
+async def delete_goal(goal_id: str):
+    result = await db.goals.delete_one({"id": goal_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Goal not found")
+    return {"message": "Goal deleted"}
 
 @api_router.post("/ai-advice", response_model=AIAdviceResponse)
 async def get_ai_advice(request: AIAdviceRequest):
