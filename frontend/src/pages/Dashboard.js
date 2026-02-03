@@ -32,6 +32,7 @@ export default function Dashboard({ onShowExpenseModal }) {
   const [budget, setBudget] = useState(null);
   const [expenses, setExpenses] = useState([]);
   const [showExpenseModal, setShowExpenseModal] = useState(false);
+  const [showIncomeModal, setShowIncomeModal] = useState(false);
   const [showAIModal, setShowAIModal] = useState(false);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [loading, setLoading] = useState(true);
