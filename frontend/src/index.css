@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,40 +6,42 @@
 
 body {
     margin: 0;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background: #000000;
+    font-weight: 400;
+    letter-spacing: -0.01em;
 }
 
 code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+    font-family: 'JetBrains Mono', monospace;
 }
 
 @layer base {
     :root {
         --background: 0 0% 0%;
         --foreground: 0 0% 100%;
-        --card: 0 0% 10%;
+        --card: 0 0% 7%;
         --card-foreground: 0 0% 100%;
-        --popover: 0 0% 10%;
+        --popover: 0 0% 7%;
         --popover-foreground: 0 0% 100%;
-        --primary: 262 100% 61%;
+        --primary: 262 83% 58%;
         --primary-foreground: 0 0% 100%;
-        --secondary: 0 0% 12%;
+        --secondary: 0 0% 10%;
         --secondary-foreground: 0 0% 100%;
-        --muted: 0 0% 16%;
-        --muted-foreground: 0 0% 63%;
-        --accent: 262 100% 61%;
+        --muted: 0 0% 25%;
+        --muted-foreground: 0 0% 60%;
+        --accent: 262 83% 58%;
         --accent-foreground: 0 0% 100%;
-        --destructive: 0 91% 60%;
+        --destructive: 0 84% 60%;
         --destructive-foreground: 0 0% 100%;
-        --success: 142 71% 45%;
-        --warning: 48 100% 50%;
-        --border: 0 0% 15%;
-        --input: 0 0% 15%;
-        --ring: 262 100% 61%;
-        --radius: 1rem;
+        --success: 142 76% 36%;
+        --warning: 38 92% 50%;
+        --border: 0 0% 12%;
+        --input: 0 0% 12%;
+        --ring: 262 83% 58%;
+        --radius: 0.75rem;
     }
 }
 
@@ -49,6 +51,10 @@ code {
     }
     body {
         @apply bg-background text-foreground;
+    }
+    h1, h2, h3, h4, h5, h6 {
+        @apply font-semibold;
+        letter-spacing: -0.02em;
     }
 }
 
