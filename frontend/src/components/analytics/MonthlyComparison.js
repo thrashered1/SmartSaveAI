@@ -4,6 +4,8 @@ import { format, startOfMonth, endOfMonth, subMonths } from 'date-fns';
 
 export default function MonthlyComparison({ currentExpenses, allExpenses }) {
   const comparison = useMemo(() => {
+    if (!allExpenses || allExpenses.length === 0) return null;
+
     const now = new Date();
     const thisMonthStart = startOfMonth(now);
     const thisMonthEnd = endOfMonth(now);
