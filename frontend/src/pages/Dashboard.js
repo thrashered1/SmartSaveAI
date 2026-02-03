@@ -154,15 +154,20 @@ export default function Dashboard({ onShowExpenseModal }) {
   return (
     <div className="max-w-md mx-auto min-h-screen bg-background p-6 pb-24">
       {/* Header */}
-      <div className="mb-8 animate-fade-in">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#793AFF] to-[#5E2AD6] flex items-center justify-center glow-purple">
-            <Sparkles className="w-6 h-6" />
-          </div>
+      <div className="mb-10 animate-fade-in">
+        <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight" data-testid="app-title">SmartSaveAI</h1>
-            <p className="text-sm text-muted-foreground">Your Savage Financial Coach</p>
+            <h1 className="text-4xl font-bold tracking-tight mb-1" data-testid="app-title">SmartSaveAI</h1>
+            <p className="text-sm text-muted-foreground font-medium">Financial Intelligence Platform</p>
           </div>
+          <Button
+            onClick={() => setShowIncomeModal(true)}
+            className="h-11 px-6 rounded-xl bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-600 shadow-lg shadow-purple-500/25 font-semibold"
+            data-testid="add-income-btn"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add Income
+          </Button>
         </div>
       </div>
 
