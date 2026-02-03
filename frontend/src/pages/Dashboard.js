@@ -95,6 +95,30 @@ export default function Dashboard({ onShowExpenseModal }) {
     }
   };
 
+  const addIncome = async (incomeData) => {
+    try {
+      // Update budget with new income
+      const currentMonth = new Date().getMonth() + 1;
+      const currentYear = new Date().getFullYear();
+      
+      // Add to budget total
+      const newTotal = budget.total_income + incomeData.amount;
+      await axios.put(`${API}/budget/${currentMonth}/${currentYear}`, {
+        ...budget,
+        total_income: newTotal
+      });
+      
+      setBudget({ ...budget, total_income: newTotal });
+      setShowIncomeModal(false);
+      toast.success(`+€${incomeData.amount} income added! 💰`);
+      
+      // Reload budget
+      await loadData();
+    } catch (error) {
+      toast.error('Failed to add income');
+    }
+  };
+
   const deleteExpense = async (id) => {
     try {
       await axios.delete(`${API}/expenses/${id}`);
