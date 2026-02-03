@@ -138,6 +138,7 @@ export default function CreateGoalModal({ open, onClose, onCreate }) {
             Create Goal 🎯
           </Button>
         </div>
+        </div>
       </DialogContent>
     </Dialog>
   );
