@@ -18,7 +18,14 @@ import HealthScore from '../components/gamification/HealthScore';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
-const CATEGORIES = ['Food', 'Transport', 'Rent', 'Fun', 'Shopping', 'Other'];
+const CATEGORIES = [
+  { name: 'Food', icon: '\ud83c\udf54', color: 'bg-[#FF6B6B]' },
+  { name: 'Transport', icon: '\ud83d\ude97', color: 'bg-[#4ECDC4]' },
+  { name: 'Rent', icon: '\ud83c\udfe0', color: 'bg-[#95E1D3]' },
+  { name: 'Fun', icon: '\ud83c\udf89', color: 'bg-[#F38181]' },
+  { name: 'Shopping', icon: '\ud83d\uded2', color: 'bg-[#AA96DA]' },
+  { name: 'Other', icon: '\ud83d\udce6', color: 'bg-[#FCBAD3]' },
+];
 
 export default function Dashboard({ onShowExpenseModal }) {
   const navigate = useNavigate();
